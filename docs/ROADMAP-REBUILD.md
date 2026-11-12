@@ -2,7 +2,7 @@
 
 This repo rebuilds the original AVD personal pool Terraform from scratch, so Austin writes every line himself. Same task format as the main roadmap: **Depends on**, **Done when**, **Fallback**, **Learn / teach**. Terraform is the source of truth; portal walkthroughs are for understanding, followed by `terraform plan` to show drift.
 
-**Order (decided 2026-11-11):** E0.1 state recovery drill (in the original repo) → **R** → E1 CI/CD (targets this repo). Writing R replaces the E0.2 tour.
+**Order (decided 2026-11-11):** **R** → E1 CI/CD (targets this repo). Writing R replaces the E0.2 tour. E0.1 was covered in part: state concepts were explained and the versions were listed (portal + CLI). Austin chose to skip the restore step, because the original environment had already been destroyed on purpose (see below).
 
 **How tasks run:** Claude explains and shows code in the chat in small pieces; Austin types it; Claude reviews with `fmt`, `validate`, `tflint` and `plan -out`; Austin applies. One branch and pull request per task; Austin runs every git command.
 
@@ -10,7 +10,8 @@ This repo rebuilds the original AVD personal pool Terraform from scratch, so Aus
 - **State:** reuse the existing state account (created by the original repo's `bootstrap/`), container `tfstate`, new key **`azure-avd-lab/dev.tfstate`**. No second bootstrap, budget or duplicate role assignments.
 - **Naming:** prefix **`avdlab-dev`** (e.g. `rg-avdlab-dev`, `vdpool-avdlab-dev`), so nothing clashes with the original `rg-avd-dev`.
 - **Address space:** VNet **`10.20.0.0/16`** (the original uses `10.10.0.0/16`). Non-overlapping ranges keep peering and a hub/spoke design possible later.
-- **Original dev environment:** stays deployed and **deallocated** as a reference, then gets destroyed after R.6 shows parity. Austin applies the destroy.
+- **Original dev environment:** **destroyed on purpose** on 2026-11-12 ~03:05 UTC (Austin, in another session) to start 100% from scratch. That included `rg-avd-dev`, the test users and the group. The state account and the original code remain. R.6 compares against the original **code and graph**, not live resources. The new test users will need the M365 license assigned again.
+- **Public-repo backend:** the backend block in git has no account names. They go in a git-ignored `backend.hcl` passed with `terraform init -backend-config=backend.hcl`, alongside a committed `backend.hcl.example`.
 - **Repo:** stays **public**; no GitHub Pro (changed later on 2026-11-11). On public repos, protected environments with required reviewers and branch protection are free, so E1 task 1.2 needs no paid plan. Rules that follow from it:
   - Never commit tenant/subscription IDs, UPNs, account or storage account names. They go in `.env` / `*.tfvars` (git-ignored).
   - In E1, don't post full plan output as a PR comment (logs and comments are public). Use a short summary (add/change/destroy counts) and keep the full plan as a workflow artifact.
@@ -19,12 +20,12 @@ This repo rebuilds the original AVD personal pool Terraform from scratch, so Aus
 
 | # | Task | Depends on | Est. | Status |
 |---|---|---|---|---|
-| R.1 | Providers, backend, resource group | E0.1 | 1.5 h | todo |
+| R.1 | Providers, backend, resource group | – | 1.5 h | doing |
 | R.2 | Networking module | R.1 | 2 h | todo |
 | R.3 | Users and group | R.1 | 1.5 h | todo |
 | R.4 | Host pool, app group, workspace, roles | R.2, R.3 | 2.5 h | todo |
 | R.5 | Session hosts | R.4 | 3 h | todo |
-| R.6 | Parity check and retire the original | R.5 | 1 h | todo |
+| R.6 | Parity check against the original code | R.5 | 1 h | todo |
 
 **R.1 Providers, backend, resource group**
 - *Does:* `versions.tf` (pinned Terraform and providers: `azurerm`, `azuread`, `random`), `backend.tf` (`azurerm` backend with Entra ID auth, so no storage keys), variables with validation, and `rg-avdlab-dev` with tags.
@@ -54,8 +55,8 @@ This repo rebuilds the original AVD personal pool Terraform from scratch, so Aus
 - *Done when:* `avduser1` signs in through the Windows App; the host shows as Entra-joined and enrolled in Intune; the VM is deallocated afterwards.
 - *Cost:* host run time while testing. Deallocate when done.
 
-**R.6 Parity check and retire the original**
-- *Does:* compare the rebuild with the original resource by resource (graphify on both repos, plus the portal). Write down any differences and the reasons for them. Then Austin destroys the original dev environment.
-- *Done when:* the differences are documented, the original `rg-avd-dev` is gone, and spend is back to a single environment.
+**R.6 Parity check against the original code**
+- *Does:* compare the rebuild with the original resource by resource (graphify on both repos, plus the portal for the new environment). Write down any differences and the reasons for them.
+- *Done when:* the differences are documented, and the original repo can be archived.
 
 **Exit check R:** Austin can rebuild the environment from an empty subscription (plus the state account) and explain every resource.
