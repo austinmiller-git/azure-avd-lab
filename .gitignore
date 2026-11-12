@@ -26,3 +26,6 @@ override.tf.json
 # graphify: keep the graph and report, not the extraction cache
 graphify-out/cache/
 .claude/
+
+# Personal Claude instructions (not for the public repo)
+CLAUDE.local.md
