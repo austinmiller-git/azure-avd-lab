@@ -19,6 +19,7 @@ override.tf.json
 .env
 .env.*
 !.env.example
+backend.hcl
 
 # OS / editor
 .DS_Store

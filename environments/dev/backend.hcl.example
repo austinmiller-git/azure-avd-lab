@@ -1,0 +1,4 @@
+resource_group_name  = "rg-avd-tfstate"
+storage_account_name = "<your state account name>"
+container_name       = "tfstate"
+key                  = "azure-avd-lab/dev.tfstate"

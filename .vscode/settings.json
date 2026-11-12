@@ -1,0 +1,18 @@
+{
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true
+  },
+  "terraform.languageServer.enable": true,
+  "terraform.experimentalFeatures.validateOnSave": true,
+  "files.associations": {
+    "*.tfvars.example": "terraform-vars",
+    "backend.hcl": "terraform-vars",
+    "backend.hcl.example": "terraform-vars"
+  },
+  "files.insertFinalNewline": true
+}

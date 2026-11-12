@@ -20,7 +20,7 @@ This repo rebuilds the original AVD personal pool Terraform from scratch, so Aus
 
 | # | Task | Depends on | Est. | Status |
 |---|---|---|---|---|
-| R.1 | Providers, backend, resource group | – | 1.5 h | doing |
+| R.1 | Providers, backend, resource group | – | 1.5 h | done |
 | R.2 | Networking module | R.1 | 2 h | todo |
 | R.3 | Users and group | R.1 | 1.5 h | todo |
 | R.4 | Host pool, app group, workspace, roles | R.2, R.3 | 2.5 h | todo |
